@@ -1,9 +1,7 @@
 
-FLAGS = -W -g
+FLAGS = -Wall -w -g
 
-all: xmem
-
-xmem: xmem.c memtest.c
+all:
 	gcc $(FLAGS) -c xmem.c memtest.c
 	gcc $(FLAGS) xmem.o memtest.o -o memtest
 
