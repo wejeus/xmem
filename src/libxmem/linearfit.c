@@ -1,6 +1,22 @@
 
-#include "xmem.h"
 
+#include <unistd.h>
+
+/* minimum units to morecore() will request from sbrk() */
+#define NALLOC 1024
+
+typedef long Align;	/* for alignment to long boundary */
+
+union header {	/* block header */
+	struct {
+		union header *next; /* next block if on free list */
+		unsigned size;	/* size of this block */
+	} s;
+
+	Align x;	/* force alignment of blocks */
+};
+
+typedef union header Header;
 
 /* empty list to get started */
 static Header base_block;
@@ -8,16 +24,20 @@ static Header base_block;
 static Header *p_free_blocks = NULL;
 
 
-/* xmalloc: general-purpose storage allocator */
-void *xmalloc(unsigned num_bytes) {
-	if(DEBUG_MALLOC) printf("Start xmalloc.\n");
+
+
+static Header *morecore(unsigned units);
+
+
+void *m_malloc(size_t size, int strategy) {
+	printf("Start malloc, strategy");
 
 	/* temp blocks used to handle next/prev location */
 	Header *p, *prev_block;
 	unsigned num_units;
 
 	/* calculate the number of blocks needed */
-	num_units = (num_bytes+sizeof(Header)-1)/sizeof(Header) + 1;
+	num_units = (size+sizeof(Header)-1)/sizeof(Header) + 1;
 
 	/* runs on every call to assign prev_block an adress.
 	 * If no free list yet, exp evaluates to NULL and
@@ -66,46 +86,15 @@ void *xmalloc(unsigned num_bytes) {
 		if (p == p_free_blocks && (p = morecore(num_units)) == NULL)
 				return NULL;
 	}
-
 }
 
-
-#define NALLOC 1024	/* minimum #units to request */
-
-/* morecore: ask system for more memory
- * Gets more memory from system by increasing the heap with a sbrk() call.
- * The pointer returned from sbrk() is will be the pointer to the Header
- * of this new block. The block is inserted into the private list of free
- * memory by calling the private function free() */
-static Header *morecore(unsigned requested_num_units) {
-	char *cp;
-	Header *new_block;
-	
-	if (requested_num_units < NALLOC)
-		requested_num_units = NALLOC;
-	
-	/* if sbrk() is successful a new pointer to the BASE
-	 * of the newly allocated memory is returned */
-	cp = sbrk(requested_num_units * sizeof(Header));
-	
-	 /* sbrk() was unable to allocate more space */
-	if (cp == (char *) -1)
-		return NULL;
-	
-	/* insert new memory block into list of free blocks */
-	new_block = (Header *) cp;
-	new_block->s.size = requested_num_units;
-	xfree((void *)(new_block+1));
-
-	return p_free_blocks;
-}
 
 /* free: put back block ap in free list */
-void xfree(void *allocated_memory) {
+void m_free(void *ptr, int strategy) {
 	
 	Header *bp, *p;
 	/* point to block header */
-	bp = (Header *)allocated_memory - 1;
+	bp = (Header *)ptr - 1;
 	
 	for (p = p_free_blocks; !(bp > p && bp < p->s.next); p = p->s.next)
 		if (p >= p->s.next && (bp > p || bp < p->s.next))
@@ -127,4 +116,30 @@ void xfree(void *allocated_memory) {
 }
 
 
+/* morecore: ask system for more memory
+ * Gets more memory from system by increasing the heap with a sbrk() call.
+ * The pointer returned from sbrk() is will be the pointer to the Header
+ * of this new block. The block is inserted into the private list of free
+ * memory by calling the private function free() */
+static Header *morecore(unsigned units) {
+	char *cp;
+	Header *new_block;
+	
+	if (units < NALLOC)
+		units = NALLOC;
+	
+	/* if sbrk() is successful a new pointer to the BASE
+	 * of the newly allocated memory is returned */
+	cp = sbrk(units * sizeof(Header));
+	
+	 /* sbrk() was unable to allocate more space */
+	if (cp == (char *) -1)
+		return NULL;
+	
+	/* insert new memory block into list of free blocks */
+	new_block = (Header *) cp;
+	new_block->s.size = units;
+	free((void *)(new_block+1));
 
+	return p_free_blocks;
+}
