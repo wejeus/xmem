@@ -1,21 +1,26 @@
 
-FLAGS = -Wall -w -g
+FLAGS = -Wall -w -g -I include 
 OPTS = -DSTRATEGY=1 -DNRQUICKLISTS=32 -DDEBUG=1
-SOURCES = $(wildcard libxmem/*.c)
-OBJS=$(SOURCES:.c=.o)
 
-all: debug libxmem memtest.c
-	gcc $(FLAGS) $(OPTS) -c memtest.c
-	gcc $(OBJS) memtest.o -o memtest
+SOURCES = libxmem/*.c
+OBJS = $(patsubst %.c,%.o,$(SOURCES))
 
+all: debug libxmem memtest
+
+memtest: libxmem.o
+	gcc memtest.o -o xmem
 
 libxmem: $(OBJS)
-	gcc $(FLAGS) $(OPTS) -c $(SOURCES) 
-	# maybe need to link in libxmem_quickfit here..
+	@echo START LIBXMEM
+	gcc $?
+
+$(OBJS): $(SOURCES)
+	@echo Now compiling: $@
+	gcc $(FLAGS) $(OPTS) -o libxmem/$< -c $@
 
 debug: debug.c
 	gcc $(FLAGS) $(OPTS) -c debug.c
 
 clean:
-	touch phony.o libxmem/phony.o memtest
-	rm *.o libxmem/*.o memtest
+	rm -rf *.o libxmem/*.o memtest
+
