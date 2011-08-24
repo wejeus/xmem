@@ -6,7 +6,7 @@
 #include "quickfit.h"
 
 void *xmalloc(size_t size) {
-	printf("asdf");
+	printf("asdf\n");
 	void *ptr = m_malloc(size, FIRSTFIT);
 	return ptr;
 }
