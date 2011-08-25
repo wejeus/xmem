@@ -1,3 +1,4 @@
 /src/*.o
-/src/memtest
+/src/libxmem/*.o
+/bin/xmem
 

@@ -8,7 +8,7 @@ int main (int argc, char **argv) {
 
 	int *p;
 	printf("Before xmalloc, p points to: %p\n", p);
-	p = (int*) malloc(1*sizeof(int));
+	p = (int*) xmalloc(sizeof(int));
 	printf("After xmalloc, p points to: %p\n", p);
 	return 0;
 }
