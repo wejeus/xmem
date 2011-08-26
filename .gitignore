@@ -1,4 +1,4 @@
-/src/*.o
-/src/libxmem/*.o
-/bin/xmem
-
+src/*.o
+src/libxmem/*.o
+bin/xmem
+bin/libxmem.a

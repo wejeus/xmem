@@ -3,10 +3,8 @@
 
 #include "libxmem.h"
 #include "linearfit.h"
-#include "quickfit.h"
 
 void *xmalloc(size_t size) {
-	printf("asdf\n");
 	void *ptr = m_malloc(size, FIRSTFIT);
 	return ptr;
 }
@@ -18,6 +16,6 @@ void free(void *ptr) {
 
 
 void *realloc(void *ptr, size_t size) {
-	
+	//TODO
 }
 

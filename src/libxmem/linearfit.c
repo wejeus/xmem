@@ -30,8 +30,7 @@ static Header *morecore(unsigned units);
 
 
 void *m_malloc(size_t size, int strategy) {
-	printf("Start malloc, strategy\n");
-
+	printf("asdf\n");
 	/* temp blocks used to handle next/prev location */
 	Header *p, *prev_block;
 	unsigned num_units;
