@@ -1,19 +1,19 @@
 
+#include "linearfit.h"
 
-#include <unistd.h>
+/* for alignment to long boundary */
+typedef long Align;
 
-/* minimum units to morecore() will request from sbrk() */
-#define NALLOC 1024
-
-typedef long Align;	/* for alignment to long boundary */
-
-union header {	/* block header */
+/* block header */
+union header {
 	struct {
-		union header *next; /* next block if on free list */
-		unsigned size;	/* size of this block */
+		/* next block if on free list */
+		union header *next;
+		/* size of this block */
+		unsigned size;
 	} s;
-
-	Align x;	/* force alignment of blocks */
+	/* force alignment of blocks */
+	Align x;
 };
 
 typedef union header Header;
@@ -25,12 +25,14 @@ static Header *p_free_blocks = NULL;
 
 
 
-
+/* minimum units to morecore() will request from sbrk() */
+#define NALLOC 1024
 static Header *morecore(unsigned units);
 
 
-void *m_malloc(size_t size, int strategy) {
-	printf("asdf\n");
+void *linear_malloc(size_t size) {
+	printf("\nlinear_malloc, using strategy: %d", STRATEGY);
+	
 	/* temp blocks used to handle next/prev location */
 	Header *p, *prev_block;
 	unsigned num_units;
@@ -89,7 +91,8 @@ void *m_malloc(size_t size, int strategy) {
 
 
 /* free: put back block ap in free list */
-void m_free(void *ptr, int strategy) {
+void linear_free(void *ptr) {
+	printf("\nlinear_free (linearfit)");
 	
 	Header *bp, *p;
 	/* point to block header */
@@ -115,12 +118,19 @@ void m_free(void *ptr, int strategy) {
 }
 
 
+void *linear_realloc(void *ptr, size_t size) {
+	
+}
+
+
 /* morecore: ask system for more memory
  * Gets more memory from system by increasing the heap with a sbrk() call.
  * The pointer returned from sbrk() is will be the pointer to the Header
  * of this new block. The block is inserted into the private list of free
  * memory by calling the private function free() */
 static Header *morecore(unsigned units) {
+	printf("\nmorecore (linearfit)");
+	
 	char *cp;
 	Header *new_block;
 	
@@ -138,7 +148,7 @@ static Header *morecore(unsigned units) {
 	/* insert new memory block into list of free blocks */
 	new_block = (Header *) cp;
 	new_block->s.size = units;
-	free((void *)(new_block+1));
+	linear_free((void *)(new_block+1));					// TODO
 
 	return p_free_blocks;
 }

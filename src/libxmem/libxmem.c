@@ -2,20 +2,23 @@
 #include <unistd.h>
 
 #include "libxmem.h"
-#include "linearfit.h"
+#include "libxmem_interface.h"
+
+extern struct LIBXMEM_INTERFACE XMEM_CALLBACK;
 
 void *xmalloc(size_t size) {
-	void *ptr = m_malloc(size, FIRSTFIT);
-	return ptr;
+	printf("In xmalloc (libxmem)\n");
+	return XMEM_CALLBACK.XMEM_malloc(size);
 }
 
 
-void free(void *ptr) {
-	return m_free(ptr, FIRSTFIT);
+void xfree(void *ptr) {
+	printf("In xfree (libxmem)\n");
+	return XMEM_CALLBACK.XMEM_free(ptr);
 }
 
 
-void *realloc(void *ptr, size_t size) {
+void *xrealloc(void *ptr, size_t size) {
 	//TODO
 }
 

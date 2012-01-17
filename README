@@ -1,0 +1,23 @@
+Förberedelsefråga: 
+Hur mycket minne slösas bort i medel och i värsta fallet i de block som allo- keras via malloc() ur “Quick fit” listorna?
+
+Vad som skall ingå i utvärderingen
+Du skall jämföra samtliga dina algoritmer mot systemets implementation vad avser exekverings- tid och minnesförbrukning med avseende på:
+• Bästa och värsta fall
+• Rimligt/ga användningsfall Dessutom måste du:
+• Beskriva och motivera dina val av tester
+• Beskriva testfallen så väl att de kan upprepas av någon utomstående
+• Sammanställa och redovisa dina resultat på ett format som underlättar för läsaren att ta till sig informationen (genom t.ex grafer eller tabeller)
+• Ange måtnoggranhet/fel i dina mätningar, där så är befogat, som varians eller konfidensinter- vall (dvs statistiskt kunna säkerställa mätresultaten).
+
+Rapporten skall vara utformad i enlighet med “Allmänna instruktioner för LabPM” som du hittar på kursens hemsida. Speciellt bör du tänka på att ha med:
+• Ifyllt försättsblad
+• En relativt utförlig beskrivning av uppgiften, hur du valt att lösa den och ditt program
+• Svar på samtliga förberedelsefrågor från detta labPM
+• Resultat från testkörningar
+• Väl kommenterad källkod
+• Uppgift om var källkoden finns och hur den skall kompileras (se till att vi kan accessa den!)
+För att vi skall kunna förbättra labben och labbkursen vill vi också att du ägnar lite tid åt att också skriva in följande i din labbrapport:
+• En uppskattning på hur mycket tid du lagt ned på att göra labben
+• Betygssätt labPM, svårighetsgrad på labben och vad du fått ut av den på en skala 1-5
+• Kan vi förbättra labben? Kom gärna med konstruktiv kritik!

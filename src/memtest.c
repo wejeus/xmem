@@ -2,13 +2,15 @@
 #include <stdio.h>
 #include "libxmem.h"
 
-int main (int argc, char **argv) {
+int main(int argc, char **argv) {
 
-	printf("XMEMTEST\n\n");
-
+	printf("-- START XMEMTEST");
+	
 	int *p;
-	printf("Before xmalloc, p points to: %p\n", p);
-	p = (int*) xmalloc(sizeof(int));
-	printf("After xmalloc, p points to: %p\n", p);
+	p = xmalloc(sizeof(p));
+	*p = 1;
+	xfree(p);
+	
+	printf("\n-- XMEMTEST DONE!\n");
 	return 0;
 }
