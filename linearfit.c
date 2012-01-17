@@ -1,5 +1,7 @@
 
 #include "linearfit.h"
+#include "params.h"
+#include <stdio.h>
 
 /* for alignment to long boundary */
 typedef long Align;

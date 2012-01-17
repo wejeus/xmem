@@ -7,13 +7,13 @@
 extern struct LIBXMEM_INTERFACE XMEM_CALLBACK;
 
 void *xmalloc(size_t size) {
-	printf("In xmalloc (libxmem)\n");
+	// printf("In xmalloc (libxmem)\n");
 	return XMEM_CALLBACK.XMEM_malloc(size);
 }
 
 
 void xfree(void *ptr) {
-	printf("In xfree (libxmem)\n");
+	// printf("In xfree (libxmem)\n");
 	return XMEM_CALLBACK.XMEM_free(ptr);
 }
 

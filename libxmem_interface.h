@@ -3,17 +3,11 @@
 #define LIBXMEM_INTERFACE_H_
 
 #include <unistd.h>
+#include "params.h"
 #include "linearfit.h"
 #include "quickfit.h"
 
-#define FIRSTFIT 1
-#define BESTFIT 2
-#define WORSTFIT 3
-#define QUICKFIT 4
 
-#ifndef STRATEGY
-#define STRATEGY FIRSTFIT /* default search strategy */
-#endif
 
 /* callback structure */
 struct LIBXMEM_INTERFACE {

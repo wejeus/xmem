@@ -1,5 +1,6 @@
 
 #include "quickfit.h"
+#include <stdio.h>
 
 void quickfit_free(void *ptr) {
 	printf("quickfit free\n");

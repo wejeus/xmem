@@ -1,19 +1,20 @@
 
 CFLAGS = -Wall -w -g -I $(INCLUDE_DIR) 
-OPTS = -DSTRATEGY=1 -DNRQUICKLISTS=32 -DDEBUG=1
+OPTS = -DSTRATEGY=3 -DNRQUICKLISTS=32 -DDEBUG=1
 INCLUDE_DIR = src/include
-SRC = src/libxmem/*.c
-OBJ = ${SRC:%.c=%.o}
+BUILD_DIR = build	
+SRCS = $(wildcard *.c)
+OBJS = $(patsubst %.c,%.o,$(SRCS))
 EXEC = xmem
 
-all: $(SRC) $(EXEC)
+xmem: makefile $(OBJS)
+	$(CC) -o $@ $^
 
-$(EXEC): $(OBJ)
-	gcc $(CFLAGS) $(OPTS) $(OBJ) src/memtest.c -o $(EXEC)
-
-%.c%.o: %.h
-	gcc $(CFLAGS) -c $< -o $@
-
+%.o: %.c
+	gcc $(CPFLAGS)  -c  $<
+		
+.PHONY: clean
 clean:
-	rm -rf $(SRC)/*.o
+	rm -rf $(OBJ) memtest.o 
+	rm -rf xmem
 
