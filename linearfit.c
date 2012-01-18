@@ -117,7 +117,6 @@ void *bestfit(Header *prev_block, unsigned num_units) {
 	
 	for (p = prev_block->s.next; ; prev_block = p, p = p->s.next) {
 		if (p->s.size >= num_units) {
-			
 			if (currentBest == NULL) {
 				printf("\nfound first suitable block, size: %d", p->s.size);
 				currentBest = p;
@@ -130,16 +129,19 @@ void *bestfit(Header *prev_block, unsigned num_units) {
 				}
 			}
 		}
-		
+			
 		if ( (p == p_free_blocks) && (currentBest != NULL) ) {
 			/* unhook form list, split block if needed */
-			if (currentBest->s.size == num_units)
+			if (currentBest->s.size == num_units) {
+				printf("\nblock size is exact");
 				currentBestPrev->s.next = currentBest->s.next;
-			else {
+			} else {
+				printf("\nblocksize is to big, splitting");
 				currentBest->s.size -= num_units;
-				currentBest += p->s.size;
+				currentBest += currentBest->s.size;
 				currentBest->s.size = num_units;
 			}
+			
 			p_free_blocks = prev_block;
 			return (void *)(currentBest+1);
 		}
