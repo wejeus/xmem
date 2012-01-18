@@ -1,20 +1,20 @@
 
-CFLAGS = -Wall -w -g -I $(INCLUDE_DIR) 
-OPTS = -DSTRATEGY=3 -DNRQUICKLISTS=32 -DDEBUG=1
-INCLUDE_DIR = src/include
-BUILD_DIR = build	
+CFLAGS = -Wall -w -g
+OPTS = -DSTRATEGY=2 -DNRQUICKLISTS=32 -DDEBUG=1
 SRCS = $(wildcard *.c)
 OBJS = $(patsubst %.c,%.o,$(SRCS))
 EXEC = xmem
 
-xmem: makefile $(OBJS)
-	$(CC) -o $@ $^
+all: xmem
+
+xmem: $(OBJS)
+	gcc $(CFLAGS) $(OPTS) -o $@ $^
 
 %.o: %.c
-	gcc $(CPFLAGS)  -c  $<
+	gcc $(CFLAGS) $(OPTS)  -c  $<
 		
 .PHONY: clean
 clean:
-	rm -rf $(OBJ) memtest.o 
+	rm -rf $(OBJS) memtest.o 
 	rm -rf xmem
 

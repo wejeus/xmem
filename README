@@ -1,0 +1,33 @@
+http://stargazer.bridgeport.edu/sed/projects/cs503/Spring_2001/kode/os/memory.htm#worstfit
+
+Best Fit
+
+The allocator places a process in the smallest block of unallocated memory in which it will fit.
+
+Problems:
+
+It requires an expensive search of the entire free list to find the best hole.
+More importantly, it leads to the creation of lots of little holes that are not big enough to satisfy any requests. This situation is called fragmentation, and is a problem for all memory-management strategies, although it is particularly bad for best-fit.
+Solution:One way to avoid making little holes is to give the client a bigger block than it asked for. For example, we might round all requests up to the next larger multiple of 64 bytes. That doesn't make the fragmentation go away, it just hides it.
+
+Unusable space in the form of holes is called external fragmentation
+Unusable space in the form of holes is called external fragmentation
+
+Worst Fit
+
+The memory manager places process in the largest block of unallocated memory available. The ides is that this placement will create the largest hole after the allocations, thus increasing the possibility that, compared to best fit, another process can use the hole created as a result of external fragmentation. 
+
+First Fit
+
+Another strategy is first fit, which simply scans the free list until a large enough hole is found. Despite the name, first-fit is generally better than best-fit because it leads to less fragmentation.
+
+Problems:
+
+Small holes tend to accumulate near the beginning of the free list, making the memory allocator search farther and farther each time.
+Solution:
+
+Next Fit
+
+Next Fit
+
+The first fit approach tends to fragment the blocks near the beginning of the list without considering blocks further down the list. Next fit is a variant of the first-fit strategy.The problem of small holes accumulating is solved with next fit algorithm, which starts each search where the last one left off, wrapping around to the beginning when the end of the list is reached (a form of one-way elevator)
