@@ -62,7 +62,8 @@ void *linear_malloc(size_t size) {
 		case WORSTFIT:
 			return worstfit(prev_block, num_units);
 		default:
-			return NULL;
+			/* defaults to firstfit */
+			return firstfit(prev_block, num_units);
 	}
 }
 
@@ -156,47 +157,52 @@ void *bestfit(Header *prev_block, unsigned num_units) {
 }
 
 void *worstfit(Header *prev_block, unsigned num_units) {
-	printf("\n(void*) worstfit(...)");
+	printf("\n(void*) worstfit(...), looking for blocksize: %d", num_units);
 	Header *p;
+	Header *currentWorst = NULL;
+	Header *currentWorstPrev = NULL;
 	
-	/* on start p is set to point to the first free block.
-	 * In the following iterations p points to the next free block to
-	 * be examined and prev_block to the previous free block. */
 	for (p = prev_block->s.next; ; prev_block = p, p = p->s.next) {
-	
-		/* test if current block is big enough */
 		if (p->s.size >= num_units) {
-			/* test if current block fits requested amount exactly
-			 * if so, unlink from list. */
-			if (p->s.size == num_units)
-				prev_block->s.next = p->s.next;
-			/* allocate tail end */
-			else {
-				p->s.size -= num_units;
-				p += p->s.size;
-				p->s.size = num_units;
+			if (currentWorst == NULL) {
+				printf("\nfound first suitable block, size: %d", p->s.size);
+				currentWorst = p;
+				currentWorstPrev = prev_block;
+			} else {
+				if (p->s.size > currentWorst->s.size) {
+					printf("\nfound worse block, size: %d", p->s.size);	
+					currentWorst = p;
+					currentWorstPrev = prev_block;
+				}
 			}
-
-			/* reset list of free space point to the last examined
-			 * block of free space. This also means that all following
-			 * calls to xmalloc will start its search on some
-			 * arbitrary position in the list. */
-			p_free_blocks = prev_block;
-
-			/* increase the block pointer by one so the callee dont
-			 * receive the adress of this blocks header but instead
-			 * the newly allocated memory requested. */
-			return (void *)(p+1);
 		}
-		/* wrapped around free list, meaning: if true we searched the entire
-		 * list without finding enough free memory to allocate. Since C uses
-		 * 'sloppy' logic, the second expression will not be evaluated unless
-		 * p != p_free_blocks. If memcore fails to allocate mem, return null. */
-		if (p == p_free_blocks && (p = morecore(num_units)) == NULL)
-				return NULL;
+			
+		if ( (p == p_free_blocks) && (currentWorst != NULL) ) {
+			/* unhook form list, split block if needed */
+			if (currentWorst->s.size == num_units) {
+				printf("\nblock size is exact");
+				currentWorstPrev->s.next = currentWorst->s.next;
+			} else {
+				printf("\nblocksize is to big, splitting");
+				currentWorst->s.size -= num_units;
+				currentWorst += currentWorst->s.size;
+				currentWorst->s.size = num_units;
+			}
+			
+			p_free_blocks = prev_block;
+			return (void *)(currentWorst+1);
+		}
+		
+		/* Reached end of list, if suitable block is found return it
+		 * otherwise request morecore. */
+		if ( (p == p_free_blocks) && ((p = morecore(num_units)) == NULL) ) {
+			return NULL;
+		}
+		
 	}	
 }
 
+// TODO: smash togheter adjacent blocks upon free -------------------------
 /* free: put back block ap in free list */
 void linear_free(void *ptr) {
 	printf("\nlinear_free");
