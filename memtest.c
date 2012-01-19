@@ -10,7 +10,7 @@ int main(int argc, char **argv) {
 	p1[1] = 4711;
 	printf("\n*p1: %d", p1[1]);
 	xfree(p1);
-	
+		
 	// int *p2 = xmalloc(sizeof(int));
 	// int *a1 = xmalloc(1000*sizeof(int));
 	// a1[0] = 0;
@@ -23,6 +23,11 @@ int main(int argc, char **argv) {
 	// *p3 = 666;
 	// xfree(p2);
 	// xfree(p3);
+	
+	int *p4 = xmalloc(sizeof(int));
+	*p4 = 666;
+	printf("\n*p4: %d", *p4);
+	xfree(p4);
 	
 	printf("\n-- XMEMTEST DONE!\n");
 	return 0;

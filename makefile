@@ -1,6 +1,6 @@
 
 CFLAGS = -Wall -w -g
-OPTS = -DSTRATEGY=4 -DNRQUICKLISTS=32 -DDEBUG=1
+OPTS = -DSTRATEGY=4 -DNRQUICKLISTS=3 -DDEBUG=1
 SRCS = $(wildcard *.c)
 OBJS = $(patsubst %.c,%.o,$(SRCS))
 EXEC = xmem

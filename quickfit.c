@@ -3,13 +3,6 @@
 #include "linearfit.h"
 #include <stdio.h>
 
-/*
-Man delar inte upp minnesblocket innan man lämnar ut det via malloc(), 
-utan slösar lite med minnet för att få det hela att gå så fort 
-som möjligt. Därav namnet “quick fit”. På samma sätt slår man 
-heller inte ihop intilliggande block då de återlämnas, utan de länkas 
-in direkt i respektive lista. 
-*/
 
 /* for alignment to long boundary */
 typedef long Align;
@@ -29,17 +22,20 @@ union header {
 typedef union header Header;
 
 /* empty list to get started */
-static Header base_block;
+// static Header base_block;
+
 /* start of free list */
 static Header *free_blocks[NRQUICKLISTS];
 
-static Header *morecore(size_t block_pos);
+static Header *morecore(int block_pos);
+void quicklist_free(int block_pos, void *ptr);
+void *quicklist_malloc(int block_pos, unsigned num_units);
 
 void quickfit_free(void *ptr) {
 	Header *bp = (Header *)ptr - 1;
 	
 	size_t block_pos = sqrt(bp->s.size) - 4;
-	if (block_pos >= NRQUICKLISTS) {
+	if (block_pos <= NRQUICKLISTS) {
 		printf("\nquickfit_free(), within bounds of some quicklist");
 		quicklist_free(block_pos, ptr);
 	} else {
@@ -48,76 +44,67 @@ void quickfit_free(void *ptr) {
 	}
 }
 
-void quicklist_free(size_t block_pos, void *ptr) {
+void quicklist_free(int block_pos, void *ptr)
+{
+	printf("\nquicklist_free");
+	Header *tmp = free_blocks[block_pos];
 	
+	if (tmp == NULL) {
+		/* nothing to connect to! */
+		printf("\nnothing to connect to!");
+		free_blocks[block_pos] = (Header *) ptr-1;
+	} else {
+		/* relink with old blocks */
+		printf("\nrelink with old blocks");
+		free_blocks[block_pos] = (Header *) ptr-1;
+		Header *next = free_blocks[block_pos]->s.next;
+		while ( (next = next->s.next) != NULL) {
+			printf("\ntraversing..");
+		}
+		next = tmp;	
+	}	
 }
 
 void *quickfit_malloc(size_t size) {
-	printf("\nquickfit_malloc");
+	printf("\nquickfit_malloc, requested size: %d", size);
 
 	/* calculate the number of blocks needed */
 	unsigned num_units = (size+sizeof(Header)-1)/sizeof(Header) + 1;
 
-	size_t block_pos = sqrt(num_units) - 4;
-	if (block_pos >= NRQUICKLISTS) {
+	int block_pos = sqrt(size) - 4;
+	if (block_pos <= 0) block_pos = 0;
+	
+	printf("\nsquareroot of req units (minus 4, smalles quicklist block is 8): %d", block_pos);
+	printf("\n%d <= %d ?", block_pos, NRQUICKLISTS);
+	
+	if (block_pos <= NRQUICKLISTS) {
 		printf("\nwithin bounds of some quicklist");
-		return quicklist_malloc(block_pos, num_units);
+		return quicklist_malloc(block_pos, size);
 	} else {
 		printf("\nlarge mem requested, doing linear_malloc(size)");
 		return linear_malloc(size);
 	}
 }
 
-void *quicklist_malloc(size_t block_pos, unsigned num_units) {
+void *quicklist_malloc(int block_pos, unsigned num_units) {	
+
+	Header *next_block = free_blocks[block_pos];
 	
-	// /* temp blocks used to handle next/prev location */
-	// Header *cur_block, *prev_block;
-	// 
-	// /* runs on every call to assign prev_block an adress.
-	//  * If no free list yet, exp evaluates to NULL and
-	//  * base, prev and free is linked into a chain of size 0,
-	//  * which will trigger a call for more memory later. */
-	// if ((prev_block = free_blocks) == NULL) {
-	// 	base_block.s.next = free_blocks = prev_block = &base_block;
-	// 	base_block.s.size = 0;
-	// }
-	// 
-	// /* on start p is set to point to the first free block.
-	//  * In the following iterations p points to the next free block to
-	//  * be examined and prev_block to the previous free block. */
-	// for (cur_block = prev_block->s.next; ; prev_block = cur_block, cur_block = cur_block->s.next) {
-	// 
-	// 	/* test if current block is big enough */
-	// 	if (cur_block->s.size >= num_units) {
-	// 		/* test if current block fits requested amount exactly
-	// 		 * if so, unlink from list. */
-	// 		if (cur_block->s.size == num_units)
-	// 			prev_block->s.next = cur_block->s.next;
-	// 		/* allocate tail end */
-	// 		else {
-	// 			cur_block->s.size -= num_units;
-	// 			cur_block += cur_block->s.size;
-	// 			cur_block->s.size = num_units;
-	// 		}
-	// 
-	// 		/* reset list of free space point to the last examined
-	// 		 * block of free space. This also means that all following
-	// 		 * calls to xmalloc will start its search on some
-	// 		 * arbitrary position in the list. */
-	// 		free_blocks = prev_block;
-	// 
-	// 		/* increase the block pointer by one so the callee dont
-	// 		 * receive the adress of this blocks header but instead
-	// 		 * the newly allocated memory requested. */
-	// 		return (void *)(cur_block+1);
-	// 	}
-	// 	/* wrapped around free list, meaning: if true we searched the entire
-	// 	 * list without finding enough free memory to allocate. Since C uses
-	// 	 * 'sloppy' logic, the second expression will not be evaluated unless
-	// 	 * p != p_free_blocks. If memcore fails to allocate mem, return null. */
-	// 	if (cur_block == free_blocks && (cur_block = morecore(block_pos,num_units)) == NULL)
-	// 			return NULL;
-	// }
+	if (next_block == NULL) {
+		printf("\nempty list for block size: %d", block_pos);
+		/* no more free memory on list, request more core */
+		free_blocks[block_pos] = morecore(block_pos);
+		if (free_blocks[block_pos] == NULL)
+			return NULL;
+
+		next_block = free_blocks[block_pos];
+	}
+	
+	printf("\nreturning first block in list");
+	/* return first block on list, we know that the requested size
+	 * will fit in this area. Then relink list */
+	free_blocks[block_pos] = next_block->s.next;
+	return (void *)(next_block+1);
 }
 
 
@@ -125,29 +112,41 @@ void *quickfit_realloc(void *ptr, size_t size) {
 	printf("\nquickfit realloc");
 }
 
+#define NALLOC_BLOCKS 8
 
-static Header *morecore(size_t block_pos) {
+static Header *morecore(int block_pos) {
 	printf("\nquickfit_morecore");
 	
 	char *cp;
 	Header *new_block;
-	unsigned units = pow(2, block_pos);
+	unsigned units = pow(2, block_pos + 4);
+	
+	printf("\nmorecore will request: %d units", NALLOC_BLOCKS * units);
 	
 	/* if sbrk() is successful a new pointer to the BASE
 	 * of the newly allocated memory is returned, allocates size of
 	 * quicklist position */
-	cp = sbrk(units * sizeof(Header));
+	cp = sbrk(NALLOC_BLOCKS * units * sizeof(Header));
 	
 	 /* sbrk() was unable to allocate more space */
 	if (cp == (char *) -1)
 		return NULL;
 	
-	/* insert new memory block into list of free blocks */
+	/* insert new memory into blocks */
+	int i;
+	Header *first = (Header *) cp;
 	new_block = (Header *) cp;
 	new_block->s.size = units;
+	for (i = 0; i < NALLOC_BLOCKS-1; ++i) {
+		++cp;
+		new_block->s.next = (Header *) cp;
+		new_block->s.size = units;		
+		new_block = new_block->s.next;
+	}
+	new_block->s.next = NULL;
 
 	/* add new memory area to list of free memory */
-	quicklist_free(block_pos, (void *)(new_block+1));
+	quicklist_free(block_pos, (void *)(first+1));
 
-	return free_blocks;
+	return free_blocks[block_pos];
 }
