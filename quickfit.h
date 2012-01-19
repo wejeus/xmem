@@ -4,8 +4,10 @@
 
 #include <unistd.h>
 
+/* block sizes for quicklist should be increasing on a factor 
+ * of 2 starting with 8, so: 8, 16, 32.. */
 #ifndef NRQUICKLISTS
-#define NRQUICKLISTS 32
+#define NRQUICKLISTS 3
 #endif
 
 void quickfit_free(void *ptr);

@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>linearfit.c</string>
+	<string>quickfit.c</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -14,75 +14,111 @@
 			<key>filename</key>
 			<string>libxmem_interface.h</string>
 			<key>lastUsed</key>
-			<date>2012-01-17T19:55:41Z</date>
+			<date>2012-01-18T15:52:25Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>libxmem.c</string>
 			<key>lastUsed</key>
-			<date>2012-01-17T19:55:56Z</date>
+			<date>2012-01-18T11:15:17Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>libxmem.h</string>
+			<key>lastUsed</key>
+			<date>2012-01-18T11:15:14Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>README</string>
+			<key>lastUsed</key>
+			<date>2012-01-18T12:38:06Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>linearfit.c</string>
 			<key>lastUsed</key>
-			<date>2012-01-17T19:56:03Z</date>
-			<key>selected</key>
-			<true/>
+			<date>2012-01-18T16:49:12Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>linearfit.h</string>
 			<key>lastUsed</key>
-			<date>2012-01-17T19:56:03Z</date>
+			<date>2012-01-18T16:48:17Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>makefile</string>
 			<key>lastUsed</key>
-			<date>2012-01-17T19:54:47Z</date>
+			<date>2012-01-18T16:49:13Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>memtest.c</string>
 			<key>lastUsed</key>
-			<date>2012-01-17T19:54:42Z</date>
+			<date>2012-01-18T16:49:37Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>quickfit.c</string>
 			<key>lastUsed</key>
-			<date>2012-01-17T19:42:31Z</date>
+			<date>2012-01-18T16:49:37Z</date>
+			<key>selected</key>
+			<true/>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>quickfit.h</string>
 			<key>lastUsed</key>
-			<date>2012-01-17T19:52:26Z</date>
+			<date>2012-01-18T16:47:42Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>params.h</string>
 			<key>lastUsed</key>
-			<date>2012-01-17T19:56:02Z</date>
+			<date>2012-01-18T16:38:51Z</date>
 		</dict>
 	</array>
 	<key>fileHierarchyDrawerWidth</key>
 	<integer>195</integer>
 	<key>metaData</key>
 	<dict>
+		<key>README</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>90</integer>
+				<key>line</key>
+				<integer>0</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
 		<key>libxmem.c</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>13</integer>
+				<integer>35</integer>
 				<key>line</key>
-				<integer>9</integer>
+				<integer>15</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>libxmem.h</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>6</integer>
+				<key>line</key>
+				<integer>7</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -108,14 +144,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>48</integer>
+				<integer>29</integer>
 				<key>line</key>
-				<integer>46</integer>
+				<integer>64</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>24</integer>
+			<integer>23</integer>
 		</dict>
 		<key>linearfit.h</key>
 		<dict>
@@ -136,9 +172,9 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>19</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>2</integer>
+				<integer>0</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -150,7 +186,7 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>25</integer>
+				<integer>11</integer>
 				<key>line</key>
 				<integer>11</integer>
 			</dict>
@@ -178,23 +214,23 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>21</integer>
+				<integer>48</integer>
 				<key>line</key>
-				<integer>1</integer>
+				<integer>122</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>83</integer>
 		</dict>
 		<key>quickfit.h</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>36</integer>
 				<key>line</key>
-				<integer>5</integer>
+				<integer>16</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -206,7 +242,9 @@
 	<array>
 		<string>libxmem.c</string>
 		<string>linearfit.c</string>
+		<string>README</string>
 		<string>libxmem_interface.h</string>
+		<string>libxmem.h</string>
 		<string>params.h</string>
 		<string>linearfit.h</string>
 		<string>quickfit.c</string>
