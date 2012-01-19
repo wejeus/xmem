@@ -1,3 +1,8 @@
+/* 
+ * Author: Samuel Wejeus
+ * Contact: particlewave at opera dot com
+ * Use as you see fit and if you do please send me a mail =)
+ */
 
 #include "quickfit.h"
 #include "linearfit.h"
